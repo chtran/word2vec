@@ -7,17 +7,18 @@ import glob
 import os.path as op
 import cPickle as pickle
 import random
+import numpy as np
 
 def load_saved_params():
     """ A helper function that loads previously saved parameters and resets iteration start """
     st = 0
-    for f in glob.glob("saved_params_*.npy"):
+    for f in glob.glob("params/saved_params_*.npy"):
         iter = int(op.splitext(op.basename(f))[0].split("_")[2])
         if (iter > st):
             st = iter
             
     if st > 0:
-        with open("saved_params_%d.npy" % st, "r") as f:
+        with open("params/saved_params_%d.npy" % st, "r") as f:
             params = pickle.load(f)
             state = pickle.load(f)
         return st, params, state
@@ -25,7 +26,7 @@ def load_saved_params():
         return st, None, None
     
 def save_params(iter, params):
-    with open("saved_params_%d.npy" % iter, "w") as f:
+    with open("params/saved_params_%d.npy" % iter, "w") as f:
         pickle.dump(params, f)
         pickle.dump(random.getstate(), f)
 
@@ -50,7 +51,7 @@ def sgd(f, x0, step, iterations, postprocessing = None, useSaved = False, PRINT_
     ###################################################################
     
     # Anneal learning rate every several iterations
-    ANNEAL_EVERY = 20000
+    ANNEAL_EVERY = 5000
     
     if useSaved:
         start_iter, oldx, state = load_saved_params()
@@ -69,17 +70,23 @@ def sgd(f, x0, step, iterations, postprocessing = None, useSaved = False, PRINT_
         postprocessing = lambda x: x
     
     expcost = None
+    costs = np.zeros(iterations/PRINT_EVERY)
     
+    #mu = 0.9
+    #v = 0
     for iter in xrange(start_iter + 1, iterations + 1):
         ### YOUR CODE HERE
         ### Don't forget to apply the postprocessing after every iteration!
         ### You might want to print the progress every few iterations.
         cost, grad = f(x)
-        x -= step * grad
+        #v = mu * v - step * grad
+        v = -step * grad
+        x += v
         x = postprocessing(x)
         
         if iter % PRINT_EVERY == 0:
             print iter,"cost:",cost
+            costs[iter/PRINT_EVERY - 1] = cost
         
         
         ### END YOUR CODE
@@ -90,4 +97,5 @@ def sgd(f, x0, step, iterations, postprocessing = None, useSaved = False, PRINT_
         if iter % ANNEAL_EVERY == 0:
             step *= 0.5
     
+    np.savetxt('costs.txt', costs, fmt='%f')
     return x

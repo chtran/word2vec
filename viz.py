@@ -4,6 +4,16 @@ from sgd import *
 from models import *
 import matplotlib.pyplot as plt
 
+# Vizualize costs
+PRINT_EVERY = 10
+costs = np.loadtxt('costs.txt')
+iters = (np.arange(len(costs))+1)*PRINT_EVERY
+plt.plot(iters, costs)
+plt.show()
+
+
+
+# Vizualize words
 random.seed(314)
 dataset = StanfordSentiment()
 tokens = dataset.tokens()

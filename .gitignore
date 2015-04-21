@@ -3,3 +3,4 @@ params
 *.sw*
 .DS_Store
 *.pyc
+costs.txt

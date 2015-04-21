@@ -1,0 +1,5 @@
+saved_params*
+params
+*.sw*
+.DS_Store
+*.pyc

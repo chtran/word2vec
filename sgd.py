@@ -51,7 +51,7 @@ def sgd(f, x0, step, iterations, postprocessing = None, useSaved = False, PRINT_
     ###################################################################
     
     # Anneal learning rate every several iterations
-    ANNEAL_EVERY = 5000
+    ANNEAL_EVERY = 20000
     
     if useSaved:
         start_iter, oldx, state = load_saved_params()

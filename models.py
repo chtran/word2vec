@@ -183,7 +183,7 @@ def cbow(currentWord, C, contextWords, tokens, inputVectors, outputVectors, word
 # Gradient check!
 
 def word2vec_sgd_wrapper(word2vecModel, tokens, wordVectors, dataset, C, word2vecCostAndGradient = softmaxCostAndGradient):
-    batchsize = 1
+    batchsize = 50
     cost = 0.0
     grad = np.zeros(wordVectors.shape)
     N = wordVectors.shape[0]

@@ -1,7 +1,8 @@
 import random
 import numpy as np
 import pdb
-#from scipy.special import expit
+from scipy.special import expit
+
 def softmax(x):
     """ Softmax function """
     ###################################################################
@@ -139,17 +140,3 @@ if __name__ == "__main__":
     # Test this function
     print "=== For autograder ==="
     print normalizeRows(np.array([[3.0,4.0],[1, 2]]))  # the result should be [[0.6, 0.8], [0.4472, 0.8944]]
-
-def expit(x):
-    """Logistic sigmoid function, ``1 / (1 + exp(-x))``.
-    See sklearn.utils.extmath.log_logistic for the log of this function.
-    """
-    # 1 / (1 + exp(-x)) = (1 + tanh(x / 2)) / 2
-    # This way of computing the logistic is both fast and stable.
-    out = x
-    out *= .5
-    np.tanh(out, out)
-    out += 1
-    out *= .5
-
-    return out

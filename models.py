@@ -98,16 +98,14 @@ def negSamplingCostAndGradient(predicted, target, outputVectors, K=10):
     r_W = np.dot(predicted, outputVectors.T) # 1xV
     r_W_prob = sigmoid(r_W) # 1xV
 
-    cost = -np.log(r_W_prob[target])
-    for negative_sample in negative_samples:
-        cost -= np.log(1 - r_W_prob[negative_sample])
+    cost = -np.log(r_W_prob[target]) -np.sum(np.log(1 - r_W_prob[negative_samples]))
     
     gradPred = -outputVectors[target,:] * (1 - r_W_prob[target])
-    for negative_sample in negative_samples:
-        gradPred += outputVectors[negative_sample,:] * r_W_prob[negative_sample]
+    gradPred += np.dot(r_W_prob[negative_samples], outputVectors[negative_samples, :])
 
     grad = np.zeros(np.shape(outputVectors))
     grad[target, :] = -predicted * (1-r_W_prob[target])
+
     for negative_sample in negative_samples:
         grad[negative_sample,:] += predicted*r_W_prob[negative_sample]
     
